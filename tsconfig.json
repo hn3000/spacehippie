@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "module":"commonjs",
+    "noImplicitAny":false,
+    "removeComments":false,
+    "preserveConstEnums":false,
+    "out":"out/space.js",
+    "target":"es5",
+    "sourceMap":true
+  },
+  "files": [
+    "src/space.ts"
+  ]
+}
