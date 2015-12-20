@@ -60,7 +60,8 @@ module space {
     constructor(id:string) {
       this._canvas = <HTMLCanvasElement>document.querySelector(id);
       this._repaintRequested = false;
-      document.addEventListener('resize', this.resized.bind(this));
+      window.addEventListener('resize', this.resized.bind(this), true);
+      this._paintables = [];
       this.resized();
     }
 
@@ -69,21 +70,49 @@ module space {
       return new Star(x, r()*h, (0.1+r())*-2, 0);
     }
 
-    resized() {
+    updateSize() {
+      let b = document.body;
+      let h = b.offsetHeight;
+      let w = b.offsetWidth;
       let canvas = this._canvas;
-      let h = document.body.offsetHeight;
-      let w = document.body.offsetWidth;
       this._h = canvas.height = h;
       this._w = canvas.width = w;
-      canvas.style.height = w+'px';
-      canvas.style.width = w+'px';
+      console.log("resized: ",w,h);
+      //canvas.style.height = h+'px';
+      //canvas.style.width = w+'px';
 
-      this._starCount = Math.ceil(w*h / 1000);
+      this._starCount = Math.ceil(w*h / 3000);
 
       this._paintables = [];
       for (let i = 0; i < this._starCount; ++i) {
         this._paintables.push(this.createStar(h,w,false));
       }
+    }
+
+    resized() {
+      let canvas = this._canvas;
+      //canvas.style.height = canvas.style.width = null;
+      canvas.height = canvas.width = 0;
+      //setTimeout(this.updateSize.bind(this), 0);
+      this.updateSize();
+    }
+
+    refill() {
+      /*
+      let p = 2*r();
+      if (p >= (this._paintables.length / this._starCount)) {
+        this._paintables.push(
+          this.createStar(this._h, this._w, true)
+        );
+      }*/
+      var length = this._paintables.length;
+      var maxCount = this._starCount;
+      for (let i = 0, n = maxCount-length; i<n; ++i) {
+        this._paintables.push(
+          this.createStar(this._h, this._w, length > maxCount*0.8)
+        );
+      }
+      this.requestRepaint();
     }
 
     redraw() {
@@ -103,22 +132,6 @@ module space {
       }
       this._repaintRequested = false;
       window.setTimeout(this.refill.bind(this), 0);
-    }
-
-    refill() {
-      /*
-      let p = 2*r();
-      if (p >= (this._paintables.length / this._starCount)) {
-        this._paintables.push(
-          this.createStar(this._h, this._w, true)
-        );
-      }*/
-      for (let i = 0, n = this._starCount-this._paintables.length; i<n; ++i) {
-        this._paintables.push(
-          this.createStar(this._h, this._w, true)
-        );
-      }
-      this.requestRepaint();
     }
 
     requestRepaint() {

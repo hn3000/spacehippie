@@ -1,18 +1,24 @@
 <html>
 <head>
-  <title>Space - the final frontier ... until you come to the end.</title>
+  <title>Space - it goes on and on forever ... until you come to the end.</title>
   <style>
-  html {
-    margin: 0;
-    padding: 10px;
-    background-color: #000;
-  }
-  body, canvas {
+  html, body {
     width: 100%;
     height: 100%;
   }
+  body {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background-color: #000;
+  }
   canvas {
-    float:left;
+    position:fixed;
+    top:0;
+    left:0;
+    bottom: 0;
+    right: 0;
+    z-index:1000;
   }
   </style>
 </head>
